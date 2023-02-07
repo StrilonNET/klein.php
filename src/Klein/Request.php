@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Klein (klein.php) - A fast & flexible router for PHP
  *
@@ -187,6 +188,18 @@ class Request
     }
 
     /**
+     * Returns the Body parameters collection
+     *
+     * @return \Klein\DataCollection\DataCollection
+     */
+    public function paramsBody()
+    {
+        $json = json_decode($this->body(), true);
+
+        return new DataCollection($json != false ? $json : []);
+    }
+
+    /**
      * Returns the named parameters collection
      *
      * @return \Klein\DataCollection\DataCollection
@@ -280,6 +293,7 @@ class Request
             $attributes,
             $this->params_get->all($mask, false),
             $this->params_post->all($mask, false),
+            $this->paramsBody()->all($mask, false),
             $this->cookies->all($mask, false),
             $this->params_named->all($mask, false) // Add our named params last
         );
